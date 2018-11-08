@@ -36,6 +36,12 @@
   version = "v2.0.0"
 
 [[projects]]
+  name = "github.com/urfave/cli"
+  packages = ["."]
+  revision = "cfb38830724cc34fedffe9a2a29fb54fa9169cd1"
+  version = "v1.20.0"
+
+[[projects]]
   name = "go.opencensus.io"
   packages = [
     ".",
@@ -204,6 +210,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "6aa61dcd78026eafd5716ddf9b9418c38771aef76e77106be6cc2752a65faecf"
+  inputs-digest = "9f3d578242921f6e3d0e0fd1e9a53781143155c26a39d5f16d4d728a1a0ffcc9"
   solver-name = "gps-cdcl"
   solver-version = 1
