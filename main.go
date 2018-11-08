@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	"flag"
+	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -11,63 +11,86 @@ import (
 
 	"cloud.google.com/go/iam"
 	"cloud.google.com/go/pubsub"
+	"github.com/urfave/cli"
 	"google.golang.org/api/iterator"
 )
 
+var (
+	Version = "No Version Provided"
+)
+
 func main() {
-	// parse cli args
-	var (
-		flagP  = flag.String("p", "", "Project id")
-		flagT  = flag.String("t", "", "Topic id")
-		flagS  = flag.String("s", "", "Subscription id")
-		flagSE = flag.String("e", "", "Subscription endpoint")
-	)
-	flag.Parse()
+	app := cli.NewApp()
 
-	// set init values
-	ctx := context.Background()
-	projectID := *flagP
-	if projectID == "" {
-		fmt.Fprintf(os.Stderr, "Project id must to set.")
-		os.Exit(1)
-	}
-	topicID := *flagT
-	if topicID == "" {
-		fmt.Fprintf(os.Stderr, "Topic id must be set.")
-		os.Exit(1)
-	}
-	subID := *flagS
-	if subID == "" {
-		fmt.Fprintf(os.Stderr, "Sub id must be set.")
-		os.Exit(1)
-	}
-	subEndpoint := *flagSE
-	if subEndpoint == "" {
-		fmt.Fprintf(os.Stderr, "Sub endpoint must be set.")
-		os.Exit(1)
+	cli.VersionFlag = cli.BoolFlag{
+		Name:  "version, V",
+		Usage: "Show version number and quit",
 	}
 
-	client, err := pubsub.NewClient(ctx, projectID)
-	if err != nil {
-		log.Fatalf("Could not create pubsub Client: %v", err)
+	app.Name = "psio"
+	app.Usage = "A command line tool for Google Cloud Pub/Sub."
+	app.Version = Version
+
+	app.Commands = []cli.Command{
+		{
+			Name:  "list",
+			Usage: "Get all subscription.",
+			Action: func(c *cli.Context) error {
+				args := c.Args()
+				if l := len(args); l == 0 {
+					return errors.New("Project id is not specified")
+
+				} else if l > 1 {
+					return errors.New("Too many args")
+				}
+				projectID := args[0]
+				ctx := context.Background()
+				client, err := pubsub.NewClient(ctx, projectID)
+				if err != nil {
+					return err
+				}
+				subs, err := list(client)
+				if err != nil {
+					return err
+				}
+
+				for _, sub := range subs {
+					fmt.Println(sub)
+				}
+				return nil
+			},
+		},
+		{
+			Name:  "create",
+			Usage: "Create subscription of Pub/Sub.",
+			Action: func(c *cli.Context) error {
+				args := c.Args()
+				if l := len(args); l < 4 {
+					return errors.New("Too less args")
+
+				} else if l > 5 {
+					return errors.New("Too many args")
+				}
+				projectID := args[0]
+				topicID := args[1]
+				subID := args[2]
+				subEndpoint := args[3]
+				ctx := context.Background()
+				client, err := pubsub.NewClient(ctx, projectID)
+				if err != nil {
+					return err
+				}
+				topic := createTopicIfNotExists(topicID, client)
+				err = createWithEndpoint(client, subID, topic, subEndpoint)
+				if err != nil {
+					return err
+				}
+				return nil
+			},
+		},
 	}
 
-	// Print all the subscriptions in the project.
-	fmt.Println("Listing all subscriptions from the project:" + projectID)
-	subs, err := list(client)
-	if err != nil {
-		log.Fatal(err)
-	}
-	for _, sub := range subs {
-		fmt.Println(sub)
-	}
-
-	t := createTopicIfNotExists(topicID, client)
-
-	// Create a new subscription.
-	if err := createWithEndpoint(client, subID, t, subEndpoint); err != nil {
-		log.Fatal(err)
-	}
+	app.Run(os.Args)
 }
 
 func list(client *pubsub.Client) ([]*pubsub.Subscription, error) {
@@ -185,6 +208,7 @@ func createWithEndpoint(client *pubsub.Client, subName string, topic *pubsub.Top
 	ctx := context.Background()
 	// [START pubsub_create_push_subscription]
 
+	fmt.Println(client, subName, topic, endpoint)
 	// For example, endpoint is "https://my-test-project.appspot.com/push".
 	sub, err := client.CreateSubscription(ctx, subName, pubsub.SubscriptionConfig{
 		Topic:       topic,
@@ -192,6 +216,7 @@ func createWithEndpoint(client *pubsub.Client, subName string, topic *pubsub.Top
 		PushConfig:  pubsub.PushConfig{Endpoint: endpoint},
 	})
 	if err != nil {
+		fmt.Println(err)
 		return err
 	}
 	fmt.Printf("Created subscription: %v\n", sub)
