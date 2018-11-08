@@ -1,8 +1,8 @@
 Still developing
 
-## psio
+## pubsub
 
-psio is a command line tool for Google Cloud Pub/Sub.
+pubsub is a command line tool for Google Cloud Pub/Sub.
 
 Easy to create subscriptions can be confirmed.
 

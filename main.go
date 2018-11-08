@@ -27,7 +27,7 @@ func main() {
 		Usage: "Show version number and quit",
 	}
 
-	app.Name = "psio"
+	app.Name = "pubsub"
 	app.Usage = "A command line tool for Google Cloud Pub/Sub."
 	app.Version = Version
 
