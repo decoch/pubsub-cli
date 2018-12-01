@@ -75,13 +75,13 @@ func getSubscriptions(ctx context.Context, projectID string) ([]Topic, error) {
 
 func show(topics []Topic) {
 	for _, topic := range topics {
-		fmt.Printf("topic: %s\n", topic.ID)
+		fmt.Printf("- topic_id: %s\n", topic.ID)
 		if len(topic.Subscriptions) > 0 {
-			fmt.Printf("subscriptions: %s\n", topic.ID)
+			fmt.Printf("  subscriptions: %s\n", topic.ID)
 		}
 		for _, sub := range topic.Subscriptions {
-			fmt.Printf("  subscription: %s\n", sub.ID)
-			fmt.Printf("  endpoint: %s\n", sub.Endpoint)
+			fmt.Printf("  - id: %s\n", sub.ID)
+			fmt.Printf("    endpoint: %s\n", sub.Endpoint)
 		}
 	}
 }
