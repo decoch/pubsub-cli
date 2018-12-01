@@ -1,6 +1,8 @@
 Still developing
 
-## pubsub-cli
+# pubsub-cli
+
+[![GoDoc](https://godoc.org/github.com/decoch/pubsub-cli?status.png)](https://godoc.org/github.com/decoch/pubsub-cli)
 
 pubsub-cli is a command line tool for Google Cloud Pub/Sub.
 

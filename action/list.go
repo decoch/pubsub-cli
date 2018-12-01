@@ -10,6 +10,7 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+// List subscriptions from pub/sub.
 func List(ctx context.Context, projectID, filename string) error {
 	topics, err := getSubscriptions(ctx, projectID)
 	if err != nil {
