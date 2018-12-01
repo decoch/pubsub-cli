@@ -10,6 +10,7 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+// Create subscription from yaml file.
 func Create(ctx context.Context, projectID, filename string) error {
 	data, err := ioutil.ReadFile(filename)
 	if err != nil {
