@@ -1,8 +1,8 @@
 Still developing
 
-## pubsub
+## pubsub-cli
 
-pubsub is a command line tool for Google Cloud Pub/Sub.
+pubsub-cli is a command line tool for Google Cloud Pub/Sub.
 
 Easy to create subscriptions can be confirmed.
 
@@ -11,9 +11,15 @@ Easy to create subscriptions can be confirmed.
 - Get list of subscription.
 - Create subscription.
 
+## Installation
+
+```bash
+go get -u github.com/decoch/pubsub-cli
+```
+
 ## How to use
 
 ```bash
-$ psio list project-id
-$ psio create project-id topic-id sub-id sub-endpoint
+$ pubsub-cli list project-id
+$ pubsub-cli create project-id filename.yaml
 ```
