@@ -1,11 +1,11 @@
 package action
 
 type Topic struct {
-	TopicID       string         `yaml:"topic"`
+	ID            string         `yaml:"topic_id"`
 	Subscriptions []Subscription `yaml:"subscriptions"`
 }
 
 type Subscription struct {
-	SubscriptionID       string `yaml:"subscription"`
-	SubscriptionEndpoint string `yaml:"endpoint"`
+	ID       string `yaml:"id"`
+	Endpoint string `yaml:"endpoint"`
 }

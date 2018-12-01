@@ -28,23 +28,23 @@ func Create(ctx context.Context, projectID, filename string) error {
 	}
 
 	for _, topic := range topics {
-		t := client.Topic(topic.TopicID)
+		t := client.Topic(topic.ID)
 		exists, err := t.Exists(ctx)
 		if err != nil {
 			return err
 		}
 		if !exists {
-			t, err = client.CreateTopic(ctx, topic.TopicID)
+			t, err = client.CreateTopic(ctx, topic.ID)
 			if err != nil {
 				return err
 			}
 		}
 
 		for _, sub := range topic.Subscriptions {
-			_, err = client.CreateSubscription(ctx, sub.SubscriptionID, pubsub.SubscriptionConfig{
+			_, err = client.CreateSubscription(ctx, sub.ID, pubsub.SubscriptionConfig{
 				Topic:       t,
 				AckDeadline: 10 * time.Second,
-				PushConfig:  pubsub.PushConfig{Endpoint: sub.SubscriptionEndpoint},
+				PushConfig:  pubsub.PushConfig{Endpoint: sub.Endpoint},
 			})
 
 			if err != nil {

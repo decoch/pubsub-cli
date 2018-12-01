@@ -43,7 +43,7 @@ func getSubscriptions(ctx context.Context, projectID string) ([]Topic, error) {
 		}
 
 		var topic Topic
-		topic.TopicID = t.ID()
+		topic.ID = t.ID()
 		subs := t.Subscriptions(ctx)
 		for {
 			s, err := subs.Next()
@@ -60,8 +60,8 @@ func getSubscriptions(ctx context.Context, projectID string) ([]Topic, error) {
 			}
 
 			subscription := Subscription{
-				SubscriptionID:       s.ID(),
-				SubscriptionEndpoint: config.PushConfig.Endpoint,
+				ID:       s.ID(),
+				Endpoint: config.PushConfig.Endpoint,
 			}
 
 			topic.Subscriptions = append(topic.Subscriptions, subscription)
@@ -74,13 +74,13 @@ func getSubscriptions(ctx context.Context, projectID string) ([]Topic, error) {
 
 func show(topics []Topic) {
 	for _, topic := range topics {
-		fmt.Printf("topic: %s\n", topic.TopicID)
+		fmt.Printf("topic: %s\n", topic.ID)
 		if len(topic.Subscriptions) > 0 {
-			fmt.Printf("subscriptions: %s\n", topic.TopicID)
+			fmt.Printf("subscriptions: %s\n", topic.ID)
 		}
 		for _, sub := range topic.Subscriptions {
-			fmt.Printf("  subscription: %s\n", sub.SubscriptionID)
-			fmt.Printf("  endpoint: %s\n", sub.SubscriptionEndpoint)
+			fmt.Printf("  subscription: %s\n", sub.ID)
+			fmt.Printf("  endpoint: %s\n", sub.Endpoint)
 		}
 	}
 }

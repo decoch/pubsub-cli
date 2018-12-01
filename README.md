@@ -23,3 +23,16 @@ go get -u github.com/decoch/pubsub-cli
 $ pubsub-cli list project-id
 $ pubsub-cli create project-id filename.yaml
 ```
+
+yaml format
+
+```yaml
+- topic_id: analytics
+  subscriptions:
+  - id: lead_tag
+    endpoint: http://localhost:8080/leads/tags
+- topic_id: analytics2
+  subscriptions:
+  - id: lead_tag2
+    endpoint: http://localhost:8080/leads/tags2
+```
