@@ -42,6 +42,10 @@ func Create(ctx context.Context, projectID, filename string) error {
 		}
 
 		for _, sub := range topic.Subscriptions {
+			remote := client.Subscription(sub.ID)
+			if remote != nil {
+				continue
+			}
 			_, err = client.CreateSubscription(ctx, sub.ID, pubsub.SubscriptionConfig{
 				Topic:       t,
 				AckDeadline: 10 * time.Second,
